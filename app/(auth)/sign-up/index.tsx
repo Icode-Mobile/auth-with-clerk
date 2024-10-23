@@ -30,7 +30,9 @@ export default function SignUpScreen() {
         password,
       });
 
-      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      await signUp.prepareEmailAddressVerification({
+        strategy: 'email_code',
+      });
 
       setPendingVerification(true);
     } catch (err: any) {
@@ -52,12 +54,13 @@ export default function SignUpScreen() {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
         code,
       });
-
-      if (completeSignUp.status === 'complete') {
-        await setActive({ session: completeSignUp.createdSessionId });
+      if (completeSignUp.status == 'complete') {
+        await setActive!({
+          session: completeSignUp.createdSessionId,
+        });
         router.replace('/');
       } else {
-        console.error(JSON.stringify(completeSignUp, null, 2));
+        console.log(JSON.stringify(completeSignUp, null, 2));
       }
     } catch (err: any) {
       console.error(JSON.stringify(err, null, 2));

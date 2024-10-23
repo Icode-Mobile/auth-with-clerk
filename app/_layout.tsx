@@ -14,6 +14,8 @@ export interface TokenCache {
   clearToken?: (key: string) => void;
 }
 
+const publicKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY || '';
+
 export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
@@ -50,20 +52,12 @@ export default function RootLayout() {
     },
   };
 
-  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
-
-  if (!publishableKey) {
-    throw new Error(
-      'Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env'
-    );
-  }
-
   if (!loaded) {
     return null;
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+    <ClerkProvider publishableKey={publicKey} tokenCache={tokenCache}>
       <ClerkLoaded>
         <Slot />
       </ClerkLoaded>

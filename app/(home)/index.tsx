@@ -3,8 +3,8 @@ import { Link } from 'expo-router';
 import { Text, TouchableOpacity, View } from 'react-native';
 
 export default function Page() {
-  const { user } = useUser();
   const { signOut } = useClerk();
+  const { user } = useUser();
 
   return (
     <View
@@ -25,13 +25,15 @@ export default function Page() {
         Seja bem vindo
       </Text>
       <SignedIn>
+        {/* Tudo aqui dentro -> LOGADO */}
         <Text
           style={{
             color: '#eb9534',
             fontSize: 16,
+            textAlign: 'center',
           }}
         >
-          Olá, {user?.emailAddresses[0].emailAddress}
+          Olá, {user && user.emailAddresses[0].emailAddress}
         </Text>
         <TouchableOpacity
           style={{
@@ -62,41 +64,47 @@ export default function Page() {
         </TouchableOpacity>
       </SignedIn>
       <SignedOut>
-        <Link
+        <View
           style={{
-            color: '#34a8eb',
-            marginVertical: 8,
+            marginVertical: 20,
           }}
-          href='/sign-in'
         >
-          <Text
+          <Link
             style={{
-              textAlign: 'center',
-              alignSelf: 'center',
-              textDecorationLine: 'underline',
-              fontSize: 16,
+              color: '#34a8eb',
+              marginVertical: 8,
             }}
+            href='/sign-in'
           >
-            Entrar
-          </Text>
-        </Link>
-        <Link
-          style={{
-            color: '#7e40e3',
-          }}
-          href='/sign-up'
-        >
-          <Text
+            <Text
+              style={{
+                textAlign: 'center',
+                alignSelf: 'center',
+                textDecorationLine: 'underline',
+                fontSize: 16,
+              }}
+            >
+              Entrar
+            </Text>
+          </Link>
+          <Link
             style={{
-              textAlign: 'center',
-              alignSelf: 'center',
-              textDecorationLine: 'underline',
-              fontSize: 16,
+              color: '#7e40e3',
             }}
+            href='/sign-up'
           >
-            Me cadastrar
-          </Text>
-        </Link>
+            <Text
+              style={{
+                textAlign: 'center',
+                alignSelf: 'center',
+                textDecorationLine: 'underline',
+                fontSize: 16,
+              }}
+            >
+              Me cadastrar
+            </Text>
+          </Link>
+        </View>
       </SignedOut>
     </View>
   );

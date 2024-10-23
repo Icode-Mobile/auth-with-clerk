@@ -1,7 +1,6 @@
 import { useOAuth, useSignIn } from '@clerk/clerk-expo';
 import * as Linking from 'expo-linking';
 import { Link, useRouter } from 'expo-router';
-import * as WebBrowser from 'expo-web-browser';
 import { useCallback, useState } from 'react';
 import {
   Alert,
@@ -12,14 +11,14 @@ import {
   View,
 } from 'react-native';
 
-import { useWarmUpBrowser } from '@/utils/warmUpBrowser';
-
-WebBrowser.maybeCompleteAuthSession();
+import { useWarmUpBrowser } from '@/hooks/useWarmUpBrowser';
 
 export default function Page() {
   useWarmUpBrowser();
-  const { signIn, setActive, isLoaded } = useSignIn();
-  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const { startOAuthFlow } = useOAuth({
+    strategy: 'oauth_google',
+  });
   const router = useRouter();
 
   const [emailAddress, setEmailAddress] = useState('');
@@ -36,11 +35,13 @@ export default function Page() {
         password,
       });
 
-      if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId });
+      if (signInAttempt.status == 'complete') {
+        await setActive!({
+          session: signInAttempt.createdSessionId,
+        });
         router.replace('/');
       } else {
-        Alert.alert('Erro', 'Login inválido');
+        Alert.alert('Erro', 'Login Inválido');
       }
     } catch (err: any) {
       Alert.alert(
@@ -48,7 +49,7 @@ export default function Page() {
         'Não foi possível continuar seu login, algo de errado aconteceu!'
       );
     }
-  }, [isLoaded, emailAddress, password]);
+  }, [emailAddress, password]);
 
   const onSignInWithGoogle = useCallback(async () => {
     try {
@@ -56,7 +57,7 @@ export default function Page() {
         redirectUrl: Linking.createURL('/', { scheme: 'myapp' }),
       });
       if (createdSessionId) {
-        setActive!({
+        await setActive!({
           session: createdSessionId,
         });
       } else {
